@@ -38,6 +38,8 @@ export default class BluetoothReader extends Component {
             appState: ''
         }
 
+
+
         this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
         this.handleStopScan = this.handleStopScan.bind(this);
         this.handleUpdateValueForCharacteristic = this.handleUpdateValueForCharacteristic.bind(this);
