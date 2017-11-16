@@ -23,6 +23,13 @@ const window = {
     height: 500,
     width: 300
 }
+
+const deviceInfo = {
+    deviceId: '1C9C427C-6039-4455-A973-405D28655412',
+    serviceId: '181D',
+    characteristicId: '2A9D'
+}
+
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 const BleManagerModule = NativeModules.BleManager;
@@ -35,9 +42,10 @@ export default class BluetoothReader extends Component {
         this.state = {
             scanning: false,
             peripherals: new Map(),
-            appState: ''
+            appState: '',
+            connected: false,
+            weight: 0
         }
-
 
 
         this.handleDiscoverPeripheral = this.handleDiscoverPeripheral.bind(this);
@@ -122,13 +130,54 @@ export default class BluetoothReader extends Component {
         }
     }
 
+    startNotification(peripheralId, serviceId, charId) {
+        BleManager.startNotification(peripheralId, serviceId, charId)
+            .then(() => {
+                // Success code
+                console.log('Notification started');
+            })
+            .catch((error) => {
+                // Failure code
+                console.log(error);
+            });
+    }
+
+    retrieveServices(peripheral) {
+        BleManager.retrieveServices(peripheral.id)
+            .then((peripheralInfo) => {
+                // Success code
+                console.log('Peripheral info:', peripheralInfo);
+            });
+    }
+
+    connectToPeripheral(peripheral) {
+        BleManager.connect(peripheral.id)
+            .then(() => {
+                // Success code
+                console.log('Connected');
+            })
+            .catch((error) => {
+                // Failure code
+                console.log(error);
+            });
+    }
+
     handleDiscoverPeripheral(peripheral) {
         var peripherals = this.state.peripherals;
-        if (!peripherals.has(peripheral.id)) {
+
+
+        if (peripheral.id == deviceInfo.deviceId) {
             console.log('Got ble peripheral', peripheral);
             peripherals.set(peripheral.id, peripheral);
             this.setState({peripherals})
         }
+
+        //
+        // if (!peripherals.has(peripheral.id)) {
+        //     console.log('Got ble peripheral', peripheral);
+        //     peripherals.set(peripheral.id, peripheral);
+        //     this.setState({peripherals})
+        // }
     }
 
     test(peripheral) {
@@ -211,6 +260,9 @@ export default class BluetoothReader extends Component {
                                     onPress={() => this.startScan()}>
                     <Text>Scan Bluetooth ({this.state.scanning ? 'on' : 'off'})</Text>
                 </TouchableHighlight>
+
+                <Text>Device status: {this.state.connected ? 'Connected' : 'Not Connected'}</Text>
+                <Text>Measurements: {this.state.weight} kg</Text>
                 <ScrollView style={styles.scroll}>
                     {(list.length == 0) &&
                     <View style={{flex: 1, margin: 20}}>

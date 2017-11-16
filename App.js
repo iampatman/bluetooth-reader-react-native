@@ -24,6 +24,8 @@ export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
+        <Text>Test</Text>
+
         <BluetoothReader/>
       </View>
     );
