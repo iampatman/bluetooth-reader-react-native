@@ -145,22 +145,28 @@ export default class BluetoothReader extends Component {
     retrieveServices(peripheral) {
         BleManager.retrieveServices(peripheral.id)
             .then((peripheralInfo) => {
-                // Success code
                 console.log('Peripheral info:', peripheralInfo);
+                this.startNotification(peripheral.id, deviceInfo.serviceId, deviceInfo.characteristicId)
             });
     }
 
     connectToPeripheral(peripheral) {
         BleManager.connect(peripheral.id)
             .then(() => {
-                // Success code
                 console.log('Connected');
+                this.retrieveServices(peripheral)
             })
             .catch((error) => {
                 // Failure code
                 console.log(error);
             });
     }
+
+
+    connectToItem(item) {
+        this.connectToPeripheral(item)
+    }
+
 
     handleDiscoverPeripheral(peripheral) {
         var peripherals = this.state.peripherals;
@@ -275,7 +281,7 @@ export default class BluetoothReader extends Component {
                         renderRow={(item) => {
                             const color = item.connected ? 'green' : '#fff';
                             return (
-                                <TouchableHighlight onPress={() => this.test(item)}>
+                                <TouchableHighlight onPress={() => this.connectToItem(item)}>
                                     <View style={[styles.row, {backgroundColor: color}]}>
                                         <Text style={{
                                             fontSize: 12,
