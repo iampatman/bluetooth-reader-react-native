@@ -172,18 +172,18 @@ export default class BluetoothReader extends Component {
         var peripherals = this.state.peripherals;
 
 
-        if (peripheral.id == deviceInfo.deviceId) {
-            console.log('Got ble peripheral', peripheral);
-            peripherals.set(peripheral.id, peripheral);
-            this.setState({peripherals})
-        }
-
-        //
-        // if (!peripherals.has(peripheral.id)) {
+        // if (peripheral.id == deviceInfo.deviceId) {
         //     console.log('Got ble peripheral', peripheral);
         //     peripherals.set(peripheral.id, peripheral);
         //     this.setState({peripherals})
         // }
+
+
+        if (!peripherals.has(peripheral.id)) {
+            console.log('Got ble peripheral', peripheral);
+            peripherals.set(peripheral.id, peripheral);
+            this.setState({peripherals})
+        }
     }
 
     test(peripheral) {
