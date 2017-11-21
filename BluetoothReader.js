@@ -20,8 +20,8 @@ import TimerMixin from 'react-timer-mixin';
 import reactMixin from 'react-mixin';
 
 const window = {
-    height: 500,
-    width: 300
+    height: 667,
+    width: 375
 }
 
 const deviceInfo = {
@@ -114,6 +114,9 @@ export default class BluetoothReader extends Component {
 
     handleUpdateValueForCharacteristic(data) {
         console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+        this.setState({
+            weight: data.value
+        })
     }
 
     handleStopScan() {
@@ -151,9 +154,13 @@ export default class BluetoothReader extends Component {
     }
 
     connectToPeripheral(peripheral) {
+        console.log('connectToPeripheral: ' + peripheral.id)
         BleManager.connect(peripheral.id)
             .then(() => {
                 console.log('Connected');
+                this.setState({
+                    connected: true
+                })
                 this.retrieveServices(peripheral)
             })
             .catch((error) => {
@@ -170,20 +177,19 @@ export default class BluetoothReader extends Component {
 
     handleDiscoverPeripheral(peripheral) {
         var peripherals = this.state.peripherals;
+        if (peripheral.id == deviceInfo.deviceId) {
+            console.log('Got ble peripheral', peripheral);
+            peripherals.set(peripheral.id, peripheral);
+            this.setState({peripherals})
+            this.connectToItem(peripheral)
+        }
 
 
-        // if (peripheral.id == deviceInfo.deviceId) {
+        // if (!peripherals.has(peripheral.id)) {
         //     console.log('Got ble peripheral', peripheral);
         //     peripherals.set(peripheral.id, peripheral);
         //     this.setState({peripherals})
         // }
-
-
-        if (!peripherals.has(peripheral.id)) {
-            console.log('Got ble peripheral', peripheral);
-            peripherals.set(peripheral.id, peripheral);
-            this.setState({peripherals})
-        }
     }
 
     test(peripheral) {
