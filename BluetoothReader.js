@@ -114,10 +114,25 @@ export default class BluetoothReader extends Component {
 
     handleUpdateValueForCharacteristic(data) {
         console.log('Received data from ' + data.peripheral + ' characteristic ' + data.characteristic, data.value);
+        if (data.peripheral == deviceInfo.deviceId) {
+            this.retreiveWeightData(data.value)
+        }
+    }
+
+    retreiveWeightData(data) {
+        console.log('retreiveWeightData')
+        let firstByte = data[1]
+        let secondByte = data[2]
+        console.log('First byte: ' + firstByte)
+        console.log('Second byte: ' + secondByte)
+        let weight = ((secondByte << 8) || firstByte) / 200.0
+        console.log('weight: ' + weight )
+
         this.setState({
-            weight: data.value
+            weight: weight
         })
     }
+
 
     handleStopScan() {
         console.log('Scan is stopped');
