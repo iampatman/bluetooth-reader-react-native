@@ -127,12 +127,10 @@ export default class BluetoothReader extends Component {
         console.log('Second byte: ' + secondByte)
         let weight = ((secondByte << 8) || firstByte) / 200.0
         console.log('weight: ' + weight )
-
         this.setState({
             weight: weight
         })
     }
-
 
     handleStopScan() {
         console.log('Scan is stopped');
@@ -288,7 +286,7 @@ export default class BluetoothReader extends Component {
                     <Text>Scan Bluetooth ({this.state.scanning ? 'on' : 'off'})</Text>
                 </TouchableHighlight>
 
-                <Text>Device status: {this.state.connected ? 'Connected' : 'Not Connected'}</Text>
+                <Text>Device status 111: {this.state.connected ? 'Connected' : 'Not Connected'}</Text>
                 <Text>Measurements: {this.state.weight} kg</Text>
                 <ScrollView style={styles.scroll}>
                     {(list.length == 0) &&
